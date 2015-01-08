@@ -6,16 +6,27 @@ var WebpackDevServer = require('webpack-dev-server');
 var gutil = require('gulp-util');
 
 var webpackDevConfig = {
-  entry: './entryScript.js',
+  devtool: 'eval',
+  entry: './app/index.js',
   output: {
-    filename: 'app/scripts/script.js'
+    path: __dirname,
+    filename: 'bundle.js',
+    publicPath: '/build/'
   },
-  devtool: 'eval'
+  resolve: {
+    extensions: ['', '.js']
+  },
+  module: {
+    loaders: [
+      { test: /\.jsx?$/, loader: '6to5', exclude: /node_modules/ },
+    ]
+  }
 };
 
 gulp.task('server', function() {
   var compiler = webpack(webpackDevConfig);
   new WebpackDevServer(compiler, {
+    publicPath: webpackDevConfig.output.publicPath,
     stats: {
       colors: true
     }
